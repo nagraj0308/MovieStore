@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="2dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/poster"
+        android:layout_width="125dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="5dp"
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="14dp"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="272dp"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/poster"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/poster"/>
+
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_toEndOf="@+id/poster"
+        android:layout_toRightOf="@+id/poster"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_toEndOf="@+id/poster"
+        android:layout_toRightOf="@+id/poster"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/language"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_toEndOf="@+id/poster"
+        android:layout_toRightOf="@+id/poster"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/certiType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/year"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_toEndOf="@+id/poster"
+        android:layout_toRightOf="@+id/poster"
+        android:text="TextView" />
+
+
+</RelativeLayout>
