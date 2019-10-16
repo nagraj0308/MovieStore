@@ -7,30 +7,19 @@
     android:padding="2dp"
     tools:context=".MainActivity">
 
-    <LinearLayout
+
+    <EditText
+        android:id="@+id/movie_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:hint="Enter movie name.." />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/movie_name"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="50dp"
-            android:hint="Enter movie name.." />
-
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/search_button"
-            android:scaleType="centerCrop"
-            android:src="@drawable/search" />
-    </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:id="@+id/rcv"
         android:background="#ffffff"
-        android:scrollbars="vertical"
-        android:layout_height="wrap_content" />
+        android:scrollbars="vertical" />
 
 </LinearLayout>

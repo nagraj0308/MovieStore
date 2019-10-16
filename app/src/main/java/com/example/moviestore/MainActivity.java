@@ -1,6 +1,7 @@
 package com.example.moviestore;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,6 +9,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -15,11 +18,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    Boolean grid=true;
     RecyclerView rcv;
-    ImageButton search;
-    EditText editText;
-    String jsonmsg=null;
+    EditText movieName;
+    String jsonmsg=null,tvString=null;
     String url=null;
+    GridLayoutManager gridLayoutManager;
+    LinearLayoutManager linearLayoutManager;
+    int gridSize=3;
+
     private String TAG = MainActivity.class.getSimpleName();
     private AsyncTask<Void, Void, Void> net;
 
@@ -32,19 +40,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initALL(){
-        search=findViewById(R.id.search_button);
-        editText=findViewById(R.id.movie_name);
+
+        gridLayoutManager = new GridLayoutManager(getApplicationContext(), gridSize);
+        linearLayoutManager=new LinearLayoutManager(getApplicationContext());
+
+        movieName=findViewById(R.id.movie_name);
 
         rcv=findViewById(R.id.rcv);
         url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
         net =   new Net().execute();
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                url="https://api.themoviedb.org/3/search/movie?api_key=6b8db85ce1e45beacf91815f5643cd76&query="+editText.getText().toString();
-                new Net().execute();
-            }
-        });
+
     }
 
     protected class Net extends AsyncTask<Void, Void, Void> {
@@ -85,9 +90,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            rcv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            rcv.setAdapter(new ContactsAdapter(jsonmsg));
-            Log.e("Async Task"," Executed" );
+            if(grid) {
+                rcv.setLayoutManager(gridLayoutManager);
+                rcv.setAdapter(new GridAdapter(jsonmsg));
+            }else{
+                rcv.setLayoutManager(linearLayoutManager);
+                rcv.setAdapter(new ContactsAdapter(jsonmsg));
+            }
 
 
         }
@@ -108,5 +117,57 @@ public class MainActivity extends AppCompatActivity {
 
         Log.e("Activity Async "," ACtivity Destroyed");
         super.onDestroy();
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mymenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.grid_button) {
+            if(grid) {
+                item.setIcon(R.drawable.linear);
+                grid=false;
+                rcv.setLayoutManager(linearLayoutManager);
+                rcv.setAdapter(new ContactsAdapter(jsonmsg));
+            }
+            else {
+                item.setIcon(R.drawable.grid);
+                grid=true;
+                rcv.setLayoutManager(gridLayoutManager);
+                rcv.setAdapter(new GridAdapter(jsonmsg));
+
+            }
+        }
+        if (id == R.id.search_button) {
+            if(movieName.getVisibility()==View.GONE){
+                movieName.setVisibility(View.VISIBLE);
+
+            }
+            else{
+                String string =movieName.getText().toString();
+                if(string.length()>0) {
+                    tvString = string;
+                    url = "https://api.themoviedb.org/3/search/movie?api_key=6b8db85ce1e45beacf91815f5643cd76&query=" + tvString;
+                    new Net().execute();
+                }else{
+
+                    url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
+                    net =   new Net().execute();
+
+                }
+
+                movieName.setVisibility(View.GONE);
+            }
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
