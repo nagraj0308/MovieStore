@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MovieStore</string>
+    <string name="dp_60">60dp</string>
 </resources>
