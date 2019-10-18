@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
+
 public class MainActivity extends AppCompatActivity {
 
     Boolean grid = true;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     GridLayoutManager gridLayoutManager;
     SearchView searchView;
     LinearLayoutManager linearLayoutManager;
+    TabLayout listType;
     int gridSize = 3;
     private String TAG = MainActivity.class.getSimpleName();
     private AsyncTask<Void, Void, Void> net;
@@ -31,15 +34,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        listType=findViewById(R.id.listType);
         initALL();
+        tabLayoutSection();
     }
 
     public void initALL() {
-
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), gridSize);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         rcv = findViewById(R.id.rcv);
-        callDefaultApi();
+        callNowPlayingApi();
+    }
+    public void tabLayoutSection(){
+        listType.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:callNowPlayingApi();break;
+                    case 1:callUpcomingApi();break;
+                    case 2:callTrendingApi();break;
+                    case 3:callTopRatedApi();break;
+                    default: break;
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
 
 
     }
@@ -68,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 if (query != null) {
                     callSearchApi(query);
                 } else {
-                    callDefaultApi();
+                    callNowPlayingApi();
                 }
                 return false;
             }
@@ -78,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 if (newText != null) {
                     callSearchApi(newText);
                 } else {
-                    callDefaultApi();
+                    callNowPlayingApi();
                 }
                 return false;
             }
@@ -106,25 +136,46 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void callDefaultApi() {
-        url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
-        net = new Net().execute();
-    }
 
     public void callSearchApi(String string) {
         url = "https://api.themoviedb.org/3/search/movie?api_key=6b8db85ce1e45beacf91815f5643cd76&query=" +string;
         new Net().execute();
     }
+    public void callNowPlayingApi() {
+        url = "https://api.themoviedb.org/3/movie/now_playing?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
+        net = new Net().execute();
+    }
+
+    public void callUpcomingApi() {
+        url = "https://api.themoviedb.org/3/movie/upcoming?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
+        net = new Net().execute();
+    }
+    public void callTrendingApi() {
+        url = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
+        net = new Net().execute();
+    }
+
+    public void callTopRatedApi() {
+        url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
+        net = new Net().execute();
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 
     protected class Net extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
-            Log.e("Async Task", " STARTED");
             super.onPreExecute();
-            Toast.makeText(MainActivity.this, "Json Data is downloading", Toast.LENGTH_SHORT).show();
-
         }
 
         @Override
@@ -134,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
             String jsonStr = sh.makeServiceCall(url);
             if (jsonStr != null) {
-
                 jsonmsg = jsonStr;
             } else {
                 Log.e(TAG, "Couldn't get json from server.");

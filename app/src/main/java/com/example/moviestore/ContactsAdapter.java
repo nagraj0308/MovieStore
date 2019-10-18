@@ -20,8 +20,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
     public ContactsAdapter(String cl) {
         try {
             JSONObject jsonObj = new JSONObject(cl);
-
-
             this.contactList = jsonObj.getJSONArray("results");
         } catch (Exception e) {
         }
