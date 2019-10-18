@@ -1,33 +1,28 @@
 package com.example.moviestore;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    Boolean grid=true;
+    Boolean grid = true;
     RecyclerView rcv;
-    EditText movieName;
-    String jsonmsg=null,tvString=null;
-    String url=null;
+    String jsonmsg = null;
+    String url = null;
     GridLayoutManager gridLayoutManager;
+    SearchView searchView;
     LinearLayoutManager linearLayoutManager;
-    int gridSize=3;
-
+    int gridSize = 3;
     private String TAG = MainActivity.class.getSimpleName();
     private AsyncTask<Void, Void, Void> net;
 
@@ -39,24 +34,94 @@ public class MainActivity extends AppCompatActivity {
         initALL();
     }
 
-    public void initALL(){
+    public void initALL() {
 
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), gridSize);
-        linearLayoutManager=new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        rcv = findViewById(R.id.rcv);
+        callDefaultApi();
 
-        movieName=findViewById(R.id.movie_name);
-
-        rcv=findViewById(R.id.rcv);
-        url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
-        net =   new Net().execute();
 
     }
 
-    protected class Net extends AsyncTask<Void, Void, Void> {
 
+
+    @Override
+    protected void onDestroy() {
+        if (net != null && !net.isCancelled()) {
+            net.cancel(true);
+        }
+
+        Log.e("Activity Async ", " ACtivity Destroyed");
+        super.onDestroy();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mymenu, menu);
+        MenuItem search = menu.findItem(R.id.action_search);
+        searchView = (SearchView) search.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query != null) {
+                    callSearchApi(query);
+                } else {
+                    callDefaultApi();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText != null) {
+                    callSearchApi(newText);
+                } else {
+                    callDefaultApi();
+                }
+                return false;
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.grid_button) {
+            if (grid) {
+                item.setIcon(R.drawable.grid);
+                grid = false;
+                rcv.setLayoutManager(linearLayoutManager);
+                rcv.setAdapter(new ContactsAdapter(jsonmsg));
+            } else {
+                item.setIcon(R.drawable.linear);
+                grid = true;
+                rcv.setLayoutManager(gridLayoutManager);
+                rcv.setAdapter(new GridAdapter(jsonmsg));
+
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void callDefaultApi() {
+        url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
+        net = new Net().execute();
+    }
+
+    public void callSearchApi(String string) {
+        url = "https://api.themoviedb.org/3/search/movie?api_key=6b8db85ce1e45beacf91815f5643cd76&query=" +string;
+        new Net().execute();
+    }
+
+
+
+    protected class Net extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
-            Log.e("Async Task"," STARTED" );
+            Log.e("Async Task", " STARTED");
             super.onPreExecute();
             Toast.makeText(MainActivity.this, "Json Data is downloading", Toast.LENGTH_SHORT).show();
 
@@ -70,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
             String jsonStr = sh.makeServiceCall(url);
             if (jsonStr != null) {
 
-                jsonmsg=jsonStr;}
-            else{
+                jsonmsg = jsonStr;
+            } else {
                 Log.e(TAG, "Couldn't get json from server.");
                 runOnUiThread(new Runnable() {
                     @Override
@@ -81,8 +146,6 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     }
                 });
-
-
             }
             return null;
         }
@@ -90,10 +153,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            if(grid) {
+            if (grid) {
                 rcv.setLayoutManager(gridLayoutManager);
                 rcv.setAdapter(new GridAdapter(jsonmsg));
-            }else{
+            } else {
                 rcv.setLayoutManager(linearLayoutManager);
                 rcv.setAdapter(new ContactsAdapter(jsonmsg));
             }
@@ -103,71 +166,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onCancelled() {
-            Log.e("Async Task"," Finished" );
+            Log.e("Async Task", " Finished");
 
             super.onCancelled();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if(net!=null && !net.isCancelled()){
-            net.cancel(true);
-        }
-
-        Log.e("Activity Async "," ACtivity Destroyed");
-        super.onDestroy();
-    }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.mymenu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.grid_button) {
-            if(grid) {
-                item.setIcon(R.drawable.linear);
-                grid=false;
-                rcv.setLayoutManager(linearLayoutManager);
-                rcv.setAdapter(new ContactsAdapter(jsonmsg));
-            }
-            else {
-                item.setIcon(R.drawable.grid);
-                grid=true;
-                rcv.setLayoutManager(gridLayoutManager);
-                rcv.setAdapter(new GridAdapter(jsonmsg));
-
-            }
-        }
-        if (id == R.id.search_button) {
-            if(movieName.getVisibility()==View.GONE){
-                movieName.setVisibility(View.VISIBLE);
-
-            }
-            else{
-                String string =movieName.getText().toString();
-                if(string.length()>0) {
-                    tvString = string;
-                    url = "https://api.themoviedb.org/3/search/movie?api_key=6b8db85ce1e45beacf91815f5643cd76&query=" + tvString;
-                    new Net().execute();
-                }else{
-
-                    url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
-                    net =   new Net().execute();
-
-                }
-
-                movieName.setVisibility(View.GONE);
-            }
-
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

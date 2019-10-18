@@ -8,12 +8,7 @@
     tools:context=".MainActivity">
 
 
-    <EditText
-        android:id="@+id/movie_name"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:visibility="gone"
-        android:hint="Enter movie name.." />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv"
