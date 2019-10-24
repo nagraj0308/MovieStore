@@ -31,7 +31,6 @@
                 android:layout_width="320dp"
                 android:layout_height="85dp"
                 android:gravity="fill_vertical"
-                android:text="Dilwale Dulhania Le Jayenge"
                 android:textColor="@color/textA"
                 android:textSize="22dp" />
 
