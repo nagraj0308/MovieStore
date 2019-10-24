@@ -6,35 +6,36 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.example.moviestore.ParcelableClasses.Result;
 import com.google.android.material.tabs.TabLayout;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements InterfaceClass.ForView {
 
     Boolean grid = true;
-    RecyclerView rcv;
-    String jsonmsg = null;
-    String url = null;
     GridLayoutManager gridLayoutManager;
-    SearchView searchView;
     LinearLayoutManager linearLayoutManager;
+    List<Result> resultList, latestResultList;
+    RecyclerView rcv;
+    RepresenterClass representerClass;
+    SearchView searchView;
     TabLayout listType;
     int gridSize = 3;
-    private String TAG = MainActivity.class.getSimpleName();
-    private AsyncTask<Void, Void, Void> net;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listType=findViewById(R.id.listType);
+        listType = findViewById(R.id.listType);
+        rcv = findViewById(R.id.rcv);
+
         initALL();
         tabLayoutSection();
     }
@@ -42,19 +43,29 @@ public class MainActivity extends AppCompatActivity {
     public void initALL() {
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), gridSize);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        rcv = findViewById(R.id.rcv);
-        callNowPlayingApi();
+        representerClass = new RepresenterClass(this);
+        representerClass.getMovieData("popular");
     }
-    public void tabLayoutSection(){
+
+    public void tabLayoutSection() {
         listType.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()){
-                    case 0:callNowPlayingApi();break;
-                    case 1:callUpcomingApi();break;
-                    case 2:callTrendingApi();break;
-                    case 3:callTopRatedApi();break;
-                    default: break;
+                switch (tab.getPosition()) {
+                    case 0:
+                        representerClass.getMovieData("now_playing");
+                        break;
+                    case 1:
+                        representerClass.getMovieData("upcoming");
+                        break;
+                    case 2:
+                        representerClass.getMovieData("popular");
+                        break;
+                    case 3:
+                        representerClass.getMovieData("top_rated");
+                        break;
+                    default:
+                        break;
                 }
 
             }
@@ -69,21 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-    }
-
-
-
-    @Override
-    protected void onDestroy() {
-        if (net != null && !net.isCancelled()) {
-            net.cancel(true);
-        }
-
-        Log.e("Activity Async ", " ACtivity Destroyed");
-        super.onDestroy();
     }
 
 
@@ -96,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query != null) {
-                    callSearchApi(query);
+                    representerClass.searchMovie(query);
                 } else {
-                    callNowPlayingApi();
+                    representerClass.getMovieData("now_playing");
                 }
                 return false;
             }
@@ -106,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText != null) {
-                    callSearchApi(newText);
+                    representerClass.searchMovie(newText);
                 } else {
-                    callNowPlayingApi();
+                    representerClass.getMovieData("now_playing");
                 }
                 return false;
             }
@@ -123,13 +119,11 @@ public class MainActivity extends AppCompatActivity {
             if (grid) {
                 item.setIcon(R.drawable.grid);
                 grid = false;
-                rcv.setLayoutManager(linearLayoutManager);
-                rcv.setAdapter(new ContactsAdapter(jsonmsg));
+                callRecycler();
             } else {
                 item.setIcon(R.drawable.linear);
                 grid = true;
-                rcv.setLayoutManager(gridLayoutManager);
-                rcv.setAdapter(new GridAdapter(jsonmsg));
+                callRecycler();
 
             }
         }
@@ -137,88 +131,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void callSearchApi(String string) {
-        url = "https://api.themoviedb.org/3/search/movie?api_key=6b8db85ce1e45beacf91815f5643cd76&query=" +string;
-        new Net().execute();
-    }
-    public void callNowPlayingApi() {
-        url = "https://api.themoviedb.org/3/movie/now_playing?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
-        net = new Net().execute();
-    }
-
-    public void callUpcomingApi() {
-        url = "https://api.themoviedb.org/3/movie/upcoming?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
-        net = new Net().execute();
-    }
-    public void callTrendingApi() {
-        url = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
-        net = new Net().execute();
+    @Override
+    public void getObject(List<Result> results) {
+        resultList = results;
+        latestResultList = new ArrayList<>();
+        latestResultList.addAll(results);
+        callRecycler();
     }
 
-    public void callTopRatedApi() {
-        url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=6b8db85ce1e45beacf91815f5643cd76";
-        net = new Net().execute();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    protected class Net extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            HttpHandler sh = new HttpHandler();
-            // Making a request to url and getting response
-
-            String jsonStr = sh.makeServiceCall(url);
-            if (jsonStr != null) {
-                jsonmsg = jsonStr;
-            } else {
-                Log.e(TAG, "Couldn't get json from server.");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            if (grid) {
-                rcv.setLayoutManager(gridLayoutManager);
-                rcv.setAdapter(new GridAdapter(jsonmsg));
-            } else {
-                rcv.setLayoutManager(linearLayoutManager);
-                rcv.setAdapter(new ContactsAdapter(jsonmsg));
-            }
-
+    public void callRecycler() {
+        if (grid) {
+            rcv.setLayoutManager(gridLayoutManager);
+            rcv.setAdapter(new GridAdapter(latestResultList));
+        } else {
+            rcv.setLayoutManager(linearLayoutManager);
+            rcv.setAdapter(new ContactsAdapter(latestResultList));
 
         }
 
-        @Override
-        protected void onCancelled() {
-            Log.e("Async Task", " Finished");
-
-            super.onCancelled();
-        }
     }
 }
