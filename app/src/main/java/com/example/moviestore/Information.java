@@ -10,36 +10,45 @@ import android.widget.TextView;
 import com.example.moviestore.AutoValue.Result;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class Information extends AppCompatActivity {
+    @BindView(R.id.backdrop)
     ImageView backdrop;
-    TextView title, certiType, pop, vote_count, vote_avg, overview, release_date, language;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.certiType)
+    TextView certiType;
+    @BindView(R.id.popularity)
+    TextView pop;
+    @BindView(R.id.vote_count)
+    TextView vote_count;
+    @BindView(R.id.vote_avg)
+    TextView vote_avg;
+    @BindView(R.id.overview)
+    TextView overview;
+    @BindView(R.id.release_date)
+    TextView release_date;
+    @BindView(R.id.language)
+    TextView language;
     String sbackdrop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
+        ButterKnife.bind(this);
         getSupportActionBar().setTitle("Information");
         initALL();
     }
 
     public void initALL() {
-        backdrop = findViewById(R.id.backdrop);
-        title = findViewById(R.id.title);
-        certiType = findViewById(R.id.certiType);
-        pop = findViewById(R.id.popularity);
-        vote_count = findViewById(R.id.vote_count);
-        vote_avg = findViewById(R.id.vote_avg);
-        overview = findViewById(R.id.overview);
-        release_date = findViewById(R.id.release_date);
-        language = findViewById(R.id.language);
         try {
-
-           Result result = getIntent().getExtras().getParcelable("AboutMovie");
-           String string;
-
-           title.setText(result.getTitle());
-           string = result.isAdult() ? "A" : "U";
+            Result result = getIntent().getExtras().getParcelable("AboutMovie");
+            String string;
+            title.setText(result.getTitle());
+            string = result.isAdult() ? "A" : "U";
             certiType.setText(string);
             pop.setText(String.valueOf(result.getPopularity()));
             vote_avg.setText(String.valueOf(result.getVoteAverage()));

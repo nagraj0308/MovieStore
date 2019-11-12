@@ -13,6 +13,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
     Result[] resultList;
 
@@ -67,28 +70,19 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
     }
 
     public class VH extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView rating;
-        TextView year;
-        TextView language;
-        ImageView poster;
-        TextView certiType;
-
+        @BindView(R.id.title) TextView title;
+        @BindView(R.id.rating) TextView rating;
+        @BindView(R.id.year)TextView year;
+        @BindView(R.id.language)TextView language;
+        @BindView(R.id.poster)ImageView poster;
+        @BindView(R.id.certiType)TextView certiType;
         VH(View itemView) {
             super(itemView);
-            this.title = itemView.findViewById(R.id.title);
-            this.year = itemView.findViewById(R.id.year);
-            this.language = itemView.findViewById(R.id.language);
-            this.rating = itemView.findViewById(R.id.rating);
-            this.poster = itemView.findViewById(R.id.poster);
-            this.certiType = itemView.findViewById(R.id.certiType);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(view.getContext(), Information.class);
-                    i.putExtra("AboutMovie", serialToParcel(resultList[getAdapterPosition()]));
-                    view.getContext().startActivity(i);
-                }
+            ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(view -> {
+                Intent i = new Intent(view.getContext(), Information.class);
+                i.putExtra("AboutMovie", serialToParcel(resultList[getAdapterPosition()]));
+                view.getContext().startActivity(i);
             });
 
 
