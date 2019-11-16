@@ -15,6 +15,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.VH> {
     Result[] resultList;
 
@@ -52,20 +55,16 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.VH> {
     }
 
     public class VH extends RecyclerView.ViewHolder {
-        public TextView movieName;
-        public ImageView moviePoster;
+        @BindView(R.id.movie_name) TextView movieName;
+        @BindView(R.id.movie_poster) ImageView moviePoster;
 
         public VH(View itemView) {
             super(itemView);
-            this.moviePoster = itemView.findViewById(R.id.movie_poster);
-            this.movieName = itemView.findViewById(R.id.movie_name);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(view.getContext(), Information.class);
-                    i.putExtra("AboutMovie", serialToParcel(resultList[getAdapterPosition()]));
-                    view.getContext().startActivity(i);
-                }
+            ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(view -> {
+                Intent i = new Intent(view.getContext(), Information.class);
+                i.putExtra("AboutMovie", serialToParcel(resultList[getAdapterPosition()]));
+                view.getContext().startActivity(i);
             });
 
         }

@@ -16,16 +16,19 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements InterfaceClass.ForView {
 
     Boolean grid = true;
     GridLayoutManager gridLayoutManager;
     LinearLayoutManager linearLayoutManager;
     List<Result> resultList, latestResultList;
-    RecyclerView rcv;
+    @BindView(R.id.rcv) RecyclerView rcv;
     RepresenterClass representerClass;
     SearchView searchView;
-    TabLayout listType;
+    @BindView(R.id.listType) TabLayout listType;
     int gridSize = 3;
 
 
@@ -33,9 +36,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceClass.Fo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listType = findViewById(R.id.listType);
-        rcv = findViewById(R.id.rcv);
-
+        ButterKnife.bind(this);
         initALL();
         tabLayoutSection();
     }
