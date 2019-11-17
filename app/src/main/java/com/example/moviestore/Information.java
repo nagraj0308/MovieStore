@@ -12,6 +12,8 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import icepick.Icepick;
+import icepick.State;
 
 public class Information extends AppCompatActivity {
     @BindView(R.id.backdrop)
@@ -32,11 +34,12 @@ public class Information extends AppCompatActivity {
     TextView release_date;
     @BindView(R.id.language)
     TextView language;
-    String sbackdrop;
+    @State String sbackdrop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_information);
         ButterKnife.bind(this);
         getSupportActionBar().setTitle("Information");
@@ -62,6 +65,11 @@ public class Information extends AppCompatActivity {
             Log.e("Error", e + "", e);
 
         }
+    }
+
+    @Override public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 
 
