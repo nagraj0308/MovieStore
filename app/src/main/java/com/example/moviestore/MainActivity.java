@@ -18,23 +18,26 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import icepick.Icepick;
+import icepick.State;
 
 public class MainActivity extends AppCompatActivity implements InterfaceClass.ForView {
 
-    Boolean grid = true;
-    GridLayoutManager gridLayoutManager;
-    LinearLayoutManager linearLayoutManager;
-    List<Result> resultList, latestResultList;
+    @State Boolean grid = true;
+    @State GridLayoutManager gridLayoutManager;
+    @State LinearLayoutManager linearLayoutManager;
+    @State List<Result> resultList, latestResultList;
     @BindView(R.id.rcv) RecyclerView rcv;
-    RepresenterClass representerClass;
-    SearchView searchView;
+    @State RepresenterClass representerClass;
+    @State SearchView searchView;
     @BindView(R.id.listType) TabLayout listType;
-    int gridSize = 3;
+    @State int gridSize = 3;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initALL();
@@ -150,5 +153,9 @@ public class MainActivity extends AppCompatActivity implements InterfaceClass.Fo
 
         }
 
+    }
+    @Override public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 }

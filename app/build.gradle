@@ -43,4 +43,6 @@ dependencies {
     api 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
     implementation 'com.jakewharton:butterknife:10.2.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+    implementation 'frankiesardo:icepick:3.2.0'
+    compileOnly 'frankiesardo:icepick-processor:3.2.0'
 }

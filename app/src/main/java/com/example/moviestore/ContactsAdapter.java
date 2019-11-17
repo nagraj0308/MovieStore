@@ -15,9 +15,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import icepick.State;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
-    Result[] resultList;
+    @State Result[] resultList;
 
     public ContactsAdapter(List<Result> results) {
         try {

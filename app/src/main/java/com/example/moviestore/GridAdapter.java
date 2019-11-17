@@ -17,9 +17,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import icepick.State;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.VH> {
-    Result[] resultList;
+    @State Result[] resultList;
 
     public GridAdapter(List<Result> results) {
         try {
