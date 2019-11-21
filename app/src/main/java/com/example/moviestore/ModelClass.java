@@ -8,20 +8,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ModelClass implements InterfaceClass.ForModel {
-
+public class ModelClass {
+    Presenter presenter;
     MovieApi movieApi = RetrofitClass.getClient().create(MovieApi.class);
 
 
-    @Override
-    public void doSomething(final OnFinishedListener onFinishedListener, String listType) {
+    public void doSomething( String listType,Presenter presenter1) {
+        this.presenter=presenter1;
         Call<Movie> call = movieApi.getMoviesList(listType);
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 Log.e("Response Code", response.code() + "");
                 if (response.code() == 200) {
-                    onFinishedListener.setMovieData(response.body().getResults());
+                    presenter.setMovieData(response.body().getResults());
                 } else {
 
                 }
@@ -37,15 +37,16 @@ public class ModelClass implements InterfaceClass.ForModel {
         });
     }
 
-    @Override
-    public void searchMovie(final OnFinishedListener onFinishedListener, String movieName) {
+
+    public void searchMovie(String movieName,Presenter presenter1) {
+        this.presenter=presenter1;
         Call<Movie> call = movieApi.searchMovie(movieName);
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 Log.e("Response Code", response.code() + "");
                 if (response.code() == 200) {
-                    onFinishedListener.setMovieData(response.body().getResults());
+                    presenter.setMovieData(response.body().getResults());
                 } else {
                 }
 

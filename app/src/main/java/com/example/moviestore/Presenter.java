@@ -1,29 +1,34 @@
 package com.example.moviestore;
 
+import android.util.Log;
+
 import com.example.moviestore.ParcelableClasses.Result;
 
 import java.util.List;
 
-public class Presenter implements InterfaceClass.ForPresenter,InterfaceClass.ForModel.OnFinishedListener {
-    InterfaceClass.ForView viewInterface;
-    InterfaceClass.ForModel modelView;
-
-    public Presenter(InterfaceClass.ForView viewInterface) {
-        this.viewInterface = viewInterface;
-        modelView = new ModelClass();
+public class Presenter {
+    MainActivity mainActivity;
+    ModelClass modelClass;
+    public Presenter(MainActivity mainActivity1){
+        this.mainActivity=mainActivity1;
+        modelClass =new ModelClass();
     }
-    @Override
-    public void getMovieData(String listType){
-        modelView.doSomething(this,listType);
+
+    void getMovieData(String listType){
+        modelClass.doSomething(listType,this);
 
     }
-    @Override
     public void setMovieData (List<Result> data) {
-        viewInterface.getObject(data);
+        if(mainActivity==null) {
+            Log.e("NagRaj","mainActivity is null");
+
+        }else{
+            mainActivity.getObject(data);
+        }
     }
-    @Override
+
     public void searchMovie(String movieName){
-       modelView.searchMovie(this,movieName);
+       modelClass.searchMovie(movieName,this);
 
     }
 }

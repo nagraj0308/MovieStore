@@ -5,30 +5,26 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.example.moviestore.ParcelableClasses.Result;
 import com.google.android.material.tabs.TabLayout;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.Icepick;
 import icepick.State;
 
-public class MainActivity extends AppCompatActivity implements InterfaceClass.ForView {
+public class MainActivity extends AppCompatActivity {
 
     @State Boolean grid = true;
     GridLayoutManager gridLayoutManager;
     LinearLayoutManager linearLayoutManager;
     List<Result> resultList, latestResultList;
     @BindView(R.id.rcv) RecyclerView rcv;
-    Presenter representerClass;
+    Presenter presenter;
     SearchView searchView;
     @BindView(R.id.listType) TabLayout listType;
     @State int gridSize = 3;
@@ -47,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceClass.Fo
     public void initALL() {
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), gridSize);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        representerClass = new Presenter(this);
-        representerClass.getMovieData("popular");
+        presenter= new Presenter(this);
+        presenter.getMovieData("popular");
     }
 
     public void tabLayoutSection() {
@@ -57,16 +53,16 @@ public class MainActivity extends AppCompatActivity implements InterfaceClass.Fo
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        representerClass.getMovieData("now_playing");
+                        presenter.getMovieData("now_playing");
                         break;
                     case 1:
-                        representerClass.getMovieData("upcoming");
+                        presenter.getMovieData("upcoming");
                         break;
                     case 2:
-                        representerClass.getMovieData("popular");
+                        presenter.getMovieData("popular");
                         break;
                     case 3:
-                        representerClass.getMovieData("top_rated");
+                        presenter.getMovieData("top_rated");
                         break;
                     default:
                         break;
@@ -96,9 +92,9 @@ public class MainActivity extends AppCompatActivity implements InterfaceClass.Fo
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query != null) {
-                    representerClass.searchMovie(query);
+                    presenter.searchMovie(query);
                 } else {
-                    representerClass.getMovieData("now_playing");
+                    presenter.getMovieData("now_playing");
                 }
                 return false;
             }
@@ -106,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements InterfaceClass.Fo
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText != null) {
-                    representerClass.searchMovie(newText);
+                    presenter.searchMovie(newText);
                 } else {
-                    representerClass.getMovieData("now_playing");
+                    presenter.getMovieData("now_playing");
                 }
                 return false;
             }
@@ -134,8 +130,6 @@ public class MainActivity extends AppCompatActivity implements InterfaceClass.Fo
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
     public void getObject(List<Result> results) {
         resultList = results;
         latestResultList = new ArrayList<>();
