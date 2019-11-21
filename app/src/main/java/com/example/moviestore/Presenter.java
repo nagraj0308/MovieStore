@@ -4,11 +4,11 @@ import com.example.moviestore.ParcelableClasses.Result;
 
 import java.util.List;
 
-public class RepresenterClass implements InterfaceClass.ForPresenter,InterfaceClass.ForModel.OnFinishedListener {
+public class Presenter implements InterfaceClass.ForPresenter,InterfaceClass.ForModel.OnFinishedListener {
     InterfaceClass.ForView viewInterface;
     InterfaceClass.ForModel modelView;
 
-    public RepresenterClass(InterfaceClass.ForView viewInterface) {
+    public Presenter(InterfaceClass.ForView viewInterface) {
         this.viewInterface = viewInterface;
         modelView = new ModelClass();
     }

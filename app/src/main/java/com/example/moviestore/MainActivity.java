@@ -24,12 +24,12 @@ import icepick.State;
 public class MainActivity extends AppCompatActivity implements InterfaceClass.ForView {
 
     @State Boolean grid = true;
-    @State GridLayoutManager gridLayoutManager;
-    @State LinearLayoutManager linearLayoutManager;
-    @State List<Result> resultList, latestResultList;
+    GridLayoutManager gridLayoutManager;
+    LinearLayoutManager linearLayoutManager;
+    List<Result> resultList, latestResultList;
     @BindView(R.id.rcv) RecyclerView rcv;
-    @State RepresenterClass representerClass;
-    @State SearchView searchView;
+    Presenter representerClass;
+    SearchView searchView;
     @BindView(R.id.listType) TabLayout listType;
     @State int gridSize = 3;
 
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceClass.Fo
     public void initALL() {
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), gridSize);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        representerClass = new RepresenterClass(this);
+        representerClass = new Presenter(this);
         representerClass.getMovieData("popular");
     }
 
