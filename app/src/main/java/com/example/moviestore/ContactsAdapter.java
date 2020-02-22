@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moviestore.AutoValue.Movie;
 import com.example.moviestore.ParcelableClasses.Result;
 import com.squareup.picasso.Picasso;
 
@@ -90,9 +91,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
         }
     }
 
-    private com.example.moviestore.AutoValue.Result serialToParcel(Result movie){
-        com.example.moviestore.AutoValue.Result newMovie;
-        newMovie= com.example.moviestore.AutoValue.Result.create(movie.getPopularity(),movie.getId(),movie.isVideo(),movie.getVoteCount(),movie.getVoteAverage(),movie.getTitle(),movie.getReleaseDate(),movie.getOriginalLanguage(),movie.getOriginalTitle(),movie.getGenreIds(),movie.getBackdropPath(),movie.isAdult(),movie.getOverview(),movie.getPosterPath());
+    private Movie serialToParcel(Result movie){
+        Movie newMovie;
+        newMovie= Movie.create(movie.getPopularity(),movie.getId(),movie.isVideo(),movie.getVoteCount(),movie.getVoteAverage(),movie.getTitle(),movie.getReleaseDate(),movie.getOriginalLanguage(),movie.getOriginalTitle(),movie.getGenreIds(),movie.getBackdropPath(),movie.isAdult(),movie.getOverview(),movie.getPosterPath());
         return newMovie;
 
     }

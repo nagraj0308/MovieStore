@@ -7,7 +7,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.moviestore.AutoValue.Result;
+import com.example.moviestore.AutoValue.Movie;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -48,7 +48,7 @@ public class Information extends AppCompatActivity {
 
     public void initALL() {
         try {
-            Result result = getIntent().getExtras().getParcelable("AboutMovie");
+            Movie result = getIntent().getExtras().getParcelable("AboutMovie");
             String string;
             title.setText(result.getTitle());
             string = result.isAdult() ? "A" : "U";

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.example.moviestore.ParcelableClasses.Result;
+import com.example.moviestore.data.Movie;
 import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     @State Boolean grid = true;
     GridLayoutManager gridLayoutManager;
     LinearLayoutManager linearLayoutManager;
-    List<Result> resultList, latestResultList;
+    List<Movie> resultList, latestResultList;
     @BindView(R.id.rcv) RecyclerView rcv;
     Presenter presenter;
     SearchView searchView;
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getObject(List<Result> results) {
+    public void getObject(List<Movie> results) {
         resultList = results;
         latestResultList = new ArrayList<>();
         latestResultList.addAll(results);

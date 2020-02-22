@@ -1,12 +1,17 @@
 package com.example.moviestore;
 
-import android.util.Log;
+import com.example.moviestore.data.Movie;
 
-import com.example.moviestore.ParcelableClasses.Result;
+import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
 public class Presenter {
+    private CompositeSubscription subscriptions;
     MainActivity mainActivity;
     ModelClass modelClass;
     public Presenter(MainActivity mainActivity1){
@@ -14,13 +19,29 @@ public class Presenter {
         modelClass =new ModelClass();
     }
 
+
+
     void getMovieData(String listType){
-        modelClass.doSomething(listType,this);
+
+        Subscription subscription = modelClass.doSomething(listType,this)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(bookingDetails -> {
+                    setMovieData(bookingDetails);
+
+                }, new ErrorAction() {
+                    @Override protected void handleError(Throwable throwable) {
+                        if (showContent()) {
+                            view.showContent();
+                            showError("Error in Connection! Please try Again");
+                        }
+                    }
+                });
+        addToSubscription(subscription);
 
     }
-    public void setMovieData (List<Result> data) {
+    public void setMovieData (List<Movie> data) {
         if(mainActivity==null) {
-            Log.e("NagRaj","mainActivity is null");
 
         }else{
             mainActivity.getObject(data);
@@ -30,5 +51,11 @@ public class Presenter {
     public void searchMovie(String movieName){
        modelClass.searchMovie(movieName,this);
 
+    }
+    protected final void addToSubscription(rx.Subscription subscription) {
+        if (null == subscriptions) {
+            subscriptions = new CompositeSubscription();
+        }
+        subscriptions.add(subscription);
     }
 }

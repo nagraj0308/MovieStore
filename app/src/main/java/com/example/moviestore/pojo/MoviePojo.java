@@ -1,29 +1,27 @@
 
-package com.example.moviestore.ParcelableClasses;
+package com.example.moviestore.pojo;
 
-import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result implements Serializable
-{
+public class MoviePojo {
 
     @SerializedName("popularity")
     @Expose
-    private float popularity;
+    private double popularity;
     @SerializedName("id")
     @Expose
-    private int id;
+    private long id;
     @SerializedName("video")
     @Expose
     private boolean video;
     @SerializedName("vote_count")
     @Expose
-    private int voteCount;
+    private long voteCount;
     @SerializedName("vote_average")
     @Expose
-    private float voteAverage;
+    private double voteAverage;
     @SerializedName("title")
     @Expose
     private String title;
@@ -38,7 +36,7 @@ public class Result implements Serializable
     private String originalTitle;
     @SerializedName("genre_ids")
     @Expose
-    private List<Integer> genreIds = null;
+    private List<Long> genreIds = null;
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
@@ -51,21 +49,20 @@ public class Result implements Serializable
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
-    private final static long serialVersionUID = 1024443689110913639L;
 
-    public float getPopularity() {
+    public double getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(float popularity) {
+    public void setPopularity(double popularity) {
         this.popularity = popularity;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -77,19 +74,19 @@ public class Result implements Serializable
         this.video = video;
     }
 
-    public int getVoteCount() {
+    public long getVoteCount() {
         return voteCount;
     }
 
-    public void setVoteCount(int voteCount) {
+    public void setVoteCount(long voteCount) {
         this.voteCount = voteCount;
     }
 
-    public float getVoteAverage() {
+    public double getVoteAverage() {
         return voteAverage;
     }
 
-    public void setVoteAverage(float voteAverage) {
+    public void setVoteAverage(double voteAverage) {
         this.voteAverage = voteAverage;
     }
 
@@ -125,11 +122,11 @@ public class Result implements Serializable
         this.originalTitle = originalTitle;
     }
 
-    public List<Integer> getGenreIds() {
+    public List<Long> getGenreIds() {
         return genreIds;
     }
 
-    public void setGenreIds(List<Integer> genreIds) {
+    public void setGenreIds(List<Long> genreIds) {
         this.genreIds = genreIds;
     }
 

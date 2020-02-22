@@ -1,21 +1,25 @@
 package com.example.moviestore;
 
-import android.util.Log;
 import com.example.moviestore.Networking.MovieApi;
 import com.example.moviestore.Networking.RetrofitClass;
-import com.example.moviestore.ParcelableClasses.Movie;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.example.moviestore.pojo.MovieResponsePojo;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 
 public class ModelClass {
     Presenter presenter;
     MovieApi movieApi = RetrofitClass.getClient().create(MovieApi.class);
 
-
     public void doSomething( String listType,Presenter presenter1) {
         this.presenter=presenter1;
-        Call<Movie> call = movieApi.getMoviesList(listType);
+        Observable<MovieResponsePojo> moviesList=movieApi.getMoviesList(listType);
+        moviesList.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(result -> result.)
+                .subscribe(this::handleResults, this::handleError);
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
@@ -36,6 +40,7 @@ public class ModelClass {
 
         });
     }
+
 
 
     public void searchMovie(String movieName,Presenter presenter1) {
@@ -59,4 +64,6 @@ public class ModelClass {
             }
         });
     }
+
+
 }
