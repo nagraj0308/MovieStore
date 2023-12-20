@@ -7,8 +7,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.moviestore.AutoValue.Result;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +34,8 @@ public class Information extends AppCompatActivity {
     TextView release_date;
     @BindView(R.id.language)
     TextView language;
-    @State String sbackdrop;
+    @State
+    String sbackdrop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +61,17 @@ public class Information extends AppCompatActivity {
             language.setText(result.getOriginalLanguage());
             release_date.setText(result.getReleaseDate());
             sbackdrop = result.getBackdropPath();
-            Picasso.get().load("http://image.tmdb.org/t/p/w780" + sbackdrop).into(backdrop);
+            Glide.with(this)
+                    .load("http://image.tmdb.org/t/p/w780" + sbackdrop)
+                    .into(backdrop);
         } catch (Exception e) {
             Log.e("Error", e + "", e);
 
         }
     }
 
-    @Override public void onSaveInstanceState(Bundle outState) {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
     }

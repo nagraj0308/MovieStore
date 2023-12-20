@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.moviestore.ParcelableClasses.Result;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -20,7 +20,8 @@ import butterknife.ButterKnife;
 import icepick.State;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.VH> {
-    @State Result[] resultList;
+    @State
+    Result[] resultList;
 
     public GridAdapter(List<Result> results) {
         try {
@@ -43,7 +44,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.VH> {
         try {
             String poster_path = resultList[position].getPosterPath();
             holder.movieName.setText(resultList[position].getTitle());
-            Picasso.get().load("http://image.tmdb.org/t/p/w500" + poster_path).into(holder.moviePoster);
+            Glide.with(holder.itemView.getContext())
+                    .load("http://image.tmdb.org/t/p/w500" + poster_path)
+                    .centerCrop()
+                    .into(holder.moviePoster);
+
         } catch (Exception e) {
 
         }
@@ -56,8 +61,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.VH> {
     }
 
     public class VH extends RecyclerView.ViewHolder {
-        @BindView(R.id.movie_name) TextView movieName;
-        @BindView(R.id.movie_poster) ImageView moviePoster;
+        @BindView(R.id.movie_name)
+        TextView movieName;
+        @BindView(R.id.movie_poster)
+        ImageView moviePoster;
 
         public VH(View itemView) {
             super(itemView);

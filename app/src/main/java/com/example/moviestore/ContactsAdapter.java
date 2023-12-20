@@ -1,4 +1,5 @@
 package com.example.moviestore;
+
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.moviestore.ParcelableClasses.Result;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -18,7 +19,8 @@ import butterknife.ButterKnife;
 import icepick.State;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
-    @State Result[] resultList;
+    @State
+    Result[] resultList;
 
     public ContactsAdapter(List<Result> results) {
         try {
@@ -42,7 +44,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
         try {
 
             String poster_path = resultList[position].getPosterPath();
-            Picasso.get().load("http://image.tmdb.org/t/p/w500" + poster_path).into(holder.poster);
+            Glide.with(holder.itemView.getContext())
+                    .load("http://image.tmdb.org/t/p/w500" + poster_path)
+                    .centerCrop()
+                    .into(holder.poster);
             Boolean adult = resultList[position].isAdult();
             String original_language = resultList[position].getOriginalLanguage();
             holder.language.setText(original_language);
@@ -71,12 +76,19 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
     }
 
     public class VH extends RecyclerView.ViewHolder {
-        @BindView(R.id.title) TextView title;
-        @BindView(R.id.rating) TextView rating;
-        @BindView(R.id.year)TextView year;
-        @BindView(R.id.language)TextView language;
-        @BindView(R.id.poster)ImageView poster;
-        @BindView(R.id.certiType)TextView certiType;
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.rating)
+        TextView rating;
+        @BindView(R.id.year)
+        TextView year;
+        @BindView(R.id.language)
+        TextView language;
+        @BindView(R.id.poster)
+        ImageView poster;
+        @BindView(R.id.certiType)
+        TextView certiType;
+
         VH(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -90,9 +102,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
         }
     }
 
-    private com.example.moviestore.AutoValue.Result serialToParcel(Result movie){
+    private com.example.moviestore.AutoValue.Result serialToParcel(Result movie) {
         com.example.moviestore.AutoValue.Result newMovie;
-        newMovie= com.example.moviestore.AutoValue.Result.create(movie.getPopularity(),movie.getId(),movie.isVideo(),movie.getVoteCount(),movie.getVoteAverage(),movie.getTitle(),movie.getReleaseDate(),movie.getOriginalLanguage(),movie.getOriginalTitle(),movie.getGenreIds(),movie.getBackdropPath(),movie.isAdult(),movie.getOverview(),movie.getPosterPath());
+        newMovie = com.example.moviestore.AutoValue.Result.create(movie.getPopularity(), movie.getId(), movie.isVideo(), movie.getVoteCount(), movie.getVoteAverage(), movie.getTitle(), movie.getReleaseDate(), movie.getOriginalLanguage(), movie.getOriginalTitle(), movie.getGenreIds(), movie.getBackdropPath(), movie.isAdult(), movie.getOverview(), movie.getPosterPath());
         return newMovie;
 
     }
