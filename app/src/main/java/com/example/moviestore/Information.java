@@ -1,5 +1,7 @@
 package com.example.moviestore;
 
+import static android.content.Intent.getIntent;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
