@@ -1,11 +1,13 @@
 package com.example.moviestore.AutoValue;
 
 
+import android.os.Parcelable;
+
 import com.google.auto.value.AutoValue;
 
 
 @AutoValue
-public abstract class Item {
+public abstract class Item implements Parcelable {
     public static Item create(float popularity, int id, boolean video, int voteCount, float voteAverage,
                               String title, String releaseDate, String originalLanguage, String originalTitle,
                               String backdropPath, boolean adult, String overview, String posterPath) {
