@@ -5,29 +5,33 @@ import android.util.Log;
 import com.example.moviestore.Networking.MovieApi;
 import com.example.moviestore.Networking.RetrofitClass;
 import com.example.moviestore.ParcelableClasses.Movie;
+import com.example.moviestore.ParcelableClasses.Result;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ModelClass {
-    Presenter presenter;
+    IFPre ifPre;
+
+    public ModelClass(IFPre ifPre) {
+        this.ifPre = ifPre;
+    }
+
     MovieApi movieApi = RetrofitClass.getClient().create(MovieApi.class);
 
 
-    public void doSomething(String listType, Presenter presenter1) {
-        this.presenter = presenter1;
+    public void doSomething(String listType) {
         Call<Movie> call = movieApi.getMoviesList(listType);
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 Log.e("Response Code", response.code() + "");
                 if (response.code() == 200) {
-                    presenter.setMovieData(response.body().getResults());
-                } else {
-
+                    ifPre.setMovies(response.body().getResults());
                 }
-
             }
 
             @Override
@@ -40,16 +44,14 @@ public class ModelClass {
     }
 
 
-    public void searchMovie(String movieName, Presenter presenter1) {
-        this.presenter = presenter1;
+    public void searchMovie(String movieName) {
         Call<Movie> call = movieApi.searchMovie(movieName);
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 Log.e("Response Code", response.code() + "");
                 if (response.code() == 200) {
-                    presenter.setMovieData(response.body().getResults());
-                } else {
+                    ifPre.setMovies(response.body().getResults());
                 }
 
             }
@@ -60,5 +62,9 @@ public class ModelClass {
 
             }
         });
+    }
+
+    public interface IFPre {
+        void setMovies(List<Result> data);
     }
 }
