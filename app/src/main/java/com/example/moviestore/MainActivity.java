@@ -19,7 +19,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Presenter.IFView {
 
     Boolean grid = true;
     GridLayoutManager gridLayoutManager;
@@ -133,7 +133,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getObject(List<Result> results) {
+
+    @Override
+    public void setData(List<Result> results) {
         resultList = results;
         latestResultList = new ArrayList<>();
         latestResultList.addAll(results);
