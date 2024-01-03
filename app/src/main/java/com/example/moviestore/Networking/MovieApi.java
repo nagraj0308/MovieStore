@@ -14,6 +14,4 @@ public interface MovieApi {
     @GET("3/search/movie?api_key=6b8db85ce1e45beacf91815f5643cd76")
     Call<Movie> searchMovie(@Query("query") String movieName);
 
-    //https://api.themoviedb.org/3/search/movie?api_key=6b8db85ce1e45beacf91815f5643cd76&query=ironman
-
 }

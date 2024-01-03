@@ -17,10 +17,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import icepick.State;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.VH> {
-    @State
     Result[] resultList;
 
     public GridAdapter(List<Result> results) {
@@ -71,18 +69,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.VH> {
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(view -> {
                 Intent i = new Intent(view.getContext(), Information.class);
-                i.putExtra("AboutMovie", serialToParcel(resultList[getAdapterPosition()]));
+                i.putExtra("AboutMovie", resultList[getAdapterPosition()]);
                 view.getContext().startActivity(i);
             });
 
         }
-    }
-
-    private com.example.moviestore.AutoValue.Result serialToParcel(Result movie) {
-        com.example.moviestore.AutoValue.Result newMovie;
-        newMovie = com.example.moviestore.AutoValue.Result.create(movie.getPopularity(), movie.getId(), movie.isVideo(), movie.getVoteCount(), movie.getVoteAverage(), movie.getTitle(), movie.getReleaseDate(), movie.getOriginalLanguage(), movie.getOriginalTitle(), movie.getGenreIds(), movie.getBackdropPath(), movie.isAdult(), movie.getOverview(), movie.getPosterPath());
-        return newMovie;
-
     }
 
 

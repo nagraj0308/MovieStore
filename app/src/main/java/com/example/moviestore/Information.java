@@ -1,6 +1,5 @@
 package com.example.moviestore;
 
-import static android.content.Intent.getIntent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,12 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.moviestore.AutoValue.Result;
+import com.example.moviestore.AutoValue.Item;
+import com.example.moviestore.ParcelableClasses.Result;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import icepick.Icepick;
-import icepick.State;
 
 public class Information extends AppCompatActivity {
     @BindView(R.id.backdrop)
@@ -36,13 +34,12 @@ public class Information extends AppCompatActivity {
     TextView release_date;
     @BindView(R.id.language)
     TextView language;
-    @State
-    String sbackdrop;
+
+    String sbackdrop = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_information);
         ButterKnife.bind(this);
         getSupportActionBar().setTitle("Information");
@@ -51,18 +48,18 @@ public class Information extends AppCompatActivity {
 
     public void initALL() {
         try {
-            Result result = getIntent().getExtras().getParcelable("AboutMovie");
+            Item item = serialToParcel((Result) getIntent().getExtras().getSerializable("AboutMovie"));
             String string;
-            title.setText(result.getTitle());
-            string = result.isAdult() ? "A" : "U";
+            title.setText(item.title());
+            string = item.adult() ? "A" : "U";
             certiType.setText(string);
-            pop.setText(String.valueOf(result.getPopularity()));
-            vote_avg.setText(String.valueOf(result.getVoteAverage()));
-            overview.setText(result.getOverview());
-            vote_count.setText(String.valueOf(result.getVoteCount()));
-            language.setText(result.getOriginalLanguage());
-            release_date.setText(result.getReleaseDate());
-            sbackdrop = result.getBackdropPath();
+            pop.setText(String.valueOf(item.popularity()));
+            vote_avg.setText(String.valueOf(item.voteAverage()));
+            overview.setText(item.overview());
+            vote_count.setText(String.valueOf(item.voteCount()));
+            language.setText(item.originalLanguage());
+            release_date.setText(item.releaseDate());
+            sbackdrop = item.backdropPath();
             Glide.with(this)
                     .load("http://image.tmdb.org/t/p/w780" + sbackdrop)
                     .into(backdrop);
@@ -72,10 +69,8 @@ public class Information extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+    private Item serialToParcel(Result movie) {
+        return Item.create(movie.getPopularity(), movie.getId(), movie.isVideo(), movie.getVoteCount(), movie.getVoteAverage(), movie.getTitle(), movie.getReleaseDate(), movie.getOriginalLanguage(), movie.getOriginalTitle(), movie.getBackdropPath(), movie.isAdult(), movie.getOverview(), movie.getPosterPath());
     }
 
 

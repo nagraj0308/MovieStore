@@ -5,35 +5,38 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.example.moviestore.ParcelableClasses.Result;
 import com.google.android.material.tabs.TabLayout;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import icepick.Icepick;
-import icepick.State;
 
 public class MainActivity extends AppCompatActivity {
 
-    @State Boolean grid = true;
+    Boolean grid = true;
     GridLayoutManager gridLayoutManager;
     LinearLayoutManager linearLayoutManager;
     List<Result> resultList, latestResultList;
-    @BindView(R.id.rcv) RecyclerView rcv;
+    @BindView(R.id.rcv)
+    RecyclerView rcv;
     Presenter presenter;
     SearchView searchView;
-    @BindView(R.id.listType) TabLayout listType;
-    @State int gridSize = 3;
+    @BindView(R.id.listType)
+    TabLayout listType;
+    int gridSize = 3;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initALL();
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public void initALL() {
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), gridSize);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        presenter= new Presenter(this);
+        presenter = new Presenter(this);
         presenter.getMovieData("popular");
     }
 
@@ -148,8 +151,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    @Override public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
-    }
+
 }
